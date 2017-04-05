@@ -16,5 +16,5 @@
 
 ***Implementation***: This rule might require a class connected to employee with such attributes as starting leave date, duration, and reason
 
-6) Dave’s Auto Repair Shop does a periodic employee review to insure quality work.
+5) Dave’s Auto Repair Shop does a periodic employee review to insure quality work.
 

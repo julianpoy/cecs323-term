@@ -1,4 +1,4 @@
-### ActiveCustmers
+### Active Customers
 An **Active Customer** is any **Customer** which is not **Prospective**. **Active Customers** can either be **Steady** or **Premier**. **Active Customers** can refer **Prospective Customers**.
 ### Competitor
 A **Competitor** is a company that offers automotive services which are similar to the services provided by Dave's Automotives.

@@ -145,7 +145,8 @@ CREATE TABLE employee (
 	phone,
 	jobTitle,
 	PRIMARY KEY (employeeID),
-	FOREIGN KEY (jobTitle) REFERENCES jobTitle(jobTitle)
+	FOREIGN KEY (jobTitle) REFERENCES jobTitle(jobTitle),
+	CONSTRAINT employee_name_phone_ck01 UNIQUE (name, phone)
 )
 
 CREATE TABLE experiencedEmployee (
@@ -223,6 +224,22 @@ CREATE TABLE mentoringRelationship (
 	FOREIGN KEY (mentorID, skillName) REFERENCES mechanicSkills(employeeID, skillName)
 )
 
+CREATE TABLE internApprentice (
+	employeeID INT NOT NULL,
+	employmentDuration,
+	evaluationNotes TEXT,
+	standing,
+	PRIMARY KEY (employeeID),
+	FOREIGN KEY (employeeID) REFERENCES employee(employeeID)
+)
+
+CREATE TABLE internApprenticeSkill (
+	employeeID INT NOT NULL,
+	skillName VARCHAR(20) NOT NULL,
+	PRIMARY KEY (employeeID, skillName),
+	FOREIGN KEY (employeeID) REFERENCES internApprentice(employeeID),
+	FOREIGN KEY (skillName) REFERENCES skills(name)
+)
 
 -- -------------------------
 -- END EMPLOYEE TABLES

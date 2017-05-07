@@ -97,9 +97,32 @@ CREATE TABLE steady (
 	FOREIGN KEY (customerID) REFERENCES activeCustomer(customerID)
 )
 
+CREATE TABLE steadyReferral (
+	customerID INT NOT NULL,
+	referralID INT NOT NULL,
+	date DATE NOT NULL,
+	dateOilChangeReceived DATE,
+	PRIMARY KEY (customerID, referralID),
+	FOREIGN KEY (customerID) REFERENCES steady(customerID),
+	FOREIGN key (referralID) REFERENCES prospective(customerID)
+)
 
+CREATE TABLE loyaltyPointsSpent (
+	customerID INT NOT NULL,
+	dateSpent DATE NOT NULL,
+	numberLoyaltyPointsSpent INT,
+	PRIMARY KEY (customerID, dateSpent),
+	FOREIGN KEY (customerID) REFERENCES steady(customerID)
+)
 
-
+-- maintenanceItem field unclear type or reference
+CREATE TABLE maintenanceItem (
+	maintenanceItem,
+	customerID INT NOT NULL,
+	dateSpent DATE NOT NULL,
+	PRIMARY KEY (maintenanceItem, customerID, dateSpent),
+	FOREIGN KEY (customerID, dateSpent) REFERENCES loyaltyPointsSpent(customerID, dateSpent)
+)
 
 -- -------------------------
 -- CUSTOMER TABLES

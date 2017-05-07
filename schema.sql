@@ -125,6 +125,105 @@ CREATE TABLE maintenanceItem (
 )
 
 -- -------------------------
--- CUSTOMER TABLES
+-- END CUSTOMER TABLES
+-- -------------------------
+
+
+-- -------------------------
+-- EMPLOYEE TABLES
+-- -------------------------
+
+CREATE TABLE jobTitle (
+	jobTitle VARCHAR(20) NOT NULL,
+	PRIMARY KEY (jobTitle)
+)
+
+CREATE TABLE employee (
+	employeeID INT NOT NULL AUTO_INCREMENT,
+	name,
+	phone,
+	jobTitle,
+	PRIMARY KEY (employeeID),
+	FOREIGN KEY (jobTitle) REFERENCES jobTitle(jobTitle)
+)
+
+CREATE TABLE experiencedEmployee (
+	employeeID INT NOT NULL,
+	PRIMARY KEY (employeeID),
+	FOREIGN KEY (employeeID) REFERENCES employee(employeeID)
+)
+
+CREATE TABLE employeeReview (
+	revieweeID INT NOT NULL,
+	reviewerID INT NOT NULL,
+	date DATE NOT NULL,
+	PRIMARY KEY (revieweeID, reviewerID, date),
+	FOREIGN KEY (revieweeID) REFERENCES employee(employeeID),
+	FOREIGN KEY (reviewerID) REFERENCES experiencedEmployee(employeeID)
+)
+
+CREATE TABLE expenses (
+	employeeID INT NOT NULL,
+	date DATETIME NOT NULL,
+	cardNumber VARCHAR(20) NOT NULL,
+	amount INT,
+	description,
+	PRIMARY KEY (date, cardNumber),
+	FOREIGN KEY (employeeID) REFERENCES employee(employeeID),
+	CONSTRAINT expenses_card_employee_ck01 UNIQUE (date, employeeID)
+)
+
+CREATE TABLE leaveType (
+	leaveType VARCHAR(20) NOT NULL,
+	PRIMARY KEY (leaveType)
+)
+
+CREATE TABLE daysOff (
+	start DATE NOT NULL,
+	end DATE NOT NULL,
+	employeeID INT NOT NULL,
+	reason,
+	approved BOOLEAN DEFAULT 0,
+	leaveType,
+	PRIMARY KEY (start, employeeID),
+	FOREIGN KEY (employeeID) REFERENCES employee(employeeID),
+	FOREIGN KEY (leaveType) REFERENCES leaveType(leaveType),
+	CONSTRAINT daysOff_end_employee_ck01 UNIQUE (end, employeeID)
+)
+
+CREATE TABLE mechanic (
+	employeeID INT NOT NULL,
+	PRIMARY KEY (employeeID),
+	FOREIGN KEY (employeeID) REFERENCES employee(employeeID)
+)
+
+CREATE TABLE skills (
+	name VARCHAR(20) NOT NULL,
+	description,
+	PRIMARY KEY (name)
+)
+
+CREATE TABLE mechanicSkills (
+	employeeID INT NOT NULL,
+	skillName VARCHAR(20) NOT NULL,
+	PRIMARY KEY (employeeID, skillName),
+	FOREIGN KEY (employeeID) REFERENCES mechanic(employeeID),
+	FOREIGN KEY (skillName) REFERENCES skills(name)
+)
+
+CREATE TABLE mentoringRelationship (
+	menteeID INT NOT NULL,
+	start DATE NOT NULL,
+	end DATE,
+	mentorID INT NOT NULL,
+	skillName VARCHAR(20) NOT NULL,
+	PRIMARY KEY (menteeID, start, mentorID, skillName),
+	FOREIGN KEY (menteeID) REFERENCES mechanic(employeeID),
+	FOREIGN KEY (mentorID, skillName) REFERENCES mechanicSkills(employeeID, skillName)
+)
+
+
+-- -------------------------
+-- END EMPLOYEE TABLES
 -- -------------------------
 

@@ -4,11 +4,11 @@
 
 CREATE TABLE customer (
 	customerID INT NOT NULL AUTO_INCREMENT,
-	email VARCHAR(20),
-	phone VARCHAR(20),
+	email VARCHAR(100),
+	phone INT,
 	accidentFreeAtDaves BOOLEAN DEFAULT 1,
 	alwaysWithin2kMiles BOOLEAN DEFAULT 1,
-	customerName VARCHAR(20),
+	customerName VARCHAR(100),
 	PRIMARY KEY (customerID),
 	CONSTRAINT customer_email_phone_customerName_ck01 UNIQUE (email, phone, customerName)
 );
@@ -21,27 +21,27 @@ CREATE TABLE corporation (
 
 CREATE TABLE address (
 	customerID INT NOT NULL,
-	city VARCHAR(20) NOT NULL,
-	state VARCHAR(20) NOT NULL,
-	zip VARCHAR(20) NOT NULL,
-	address VARCHAR(20) NOT NULL,
-	addressType VARCHAR(20) NOT NULL,
+	city VARCHAR(100) NOT NULL,
+	state VARCHAR(50) NOT NULL,
+	zip INT NOT NULL,
+	address VARCHAR(100) NOT NULL,
+	addressType VARCHAR(100) NOT NULL,
 	PRIMARY KEY (customerID, addressType),
 	FOREIGN KEY (customerID) REFERENCES customer(customerID),
 	FOREIGN KEY (addressType) REFERENCES addressType(addressType)
 )
 
 CREATE TABLE addressType (
-	addressType VARCHAR(20) NOT NULL,
+	addressType VARCHAR(100) NOT NULL,
 	PRIMARY KEY (addressType)
 )
 
 CREATE TABLE private (
 	customerID INT NOT NULL,
-	mailingAddress,
-	city,
-	state,
-	zip,
+	mailingAddress VARCHAR(100),
+	city VARCHAR(100),
+	state VARCHAR(50),
+	zip INT,
 	PRIMARY KEY (customerID),
 	FOREIGN KEY (customerID) REFERENCES customer(customerID)
 )
@@ -54,11 +54,11 @@ CREATE TABLE activeCustomer (
 
 CREATE TABLE premier (
 	customerID INT NOT NULL,
-	annualFee,
-	monthlyInstallmentAmount,
-	dateLastPaymentReceived,
-	dateMonthlyFeeLastUpdated,
-	premierServiceValue,
+	annualFee INT,
+	monthlyInstallmentAmount INT,
+	dateLastPaymentReceived DATE,
+	dateMonthlyFeeLastUpdated DATE,
+	premierServiceValue INT,
 	PRIMARY KEY (customerID),
 	FOREIGN KEY (customerID) REFERENCES activeCustomer(customerID)
 )
@@ -68,7 +68,7 @@ CREATE TABLE premier (
 CREATE TABLE prospective (
 	customerID INT NOT NULL,
 	referralID INT NOT NULL,
-	status,
+	status BOOLEAN DEFAULT 1,
 	PRIMARY KEY (customerID),
 	FOREIGN KEY (customerID) REFERENCES customer(customerID),
 	FOREIGN KEY (referralID) REFERENCES activeCustomer(customerID)
@@ -84,7 +84,7 @@ CREATE TABLE contactInstanceDate (
 CREATE TABLE premierReferral (
 	customerID INT NOT NULL,
 	referralID INT NOT NULL,
-	date DATETIME,
+	date DATETIME DEFAULT GETDATE(),
 	PRIMARY KEY (customerID, referralID),
 	FOREIGN KEY (customerID) REFERENCES premier(customerID),
 	FOREIGN KEY (referralID) REFERENCES prospective(customerID)
@@ -92,8 +92,8 @@ CREATE TABLE premierReferral (
 
 CREATE TABLE steady (
 	customerID INT NOT NULL,
-	lastEmailSent,
-	totalLoyaltyPoints,
+	lastEmailSent DATE,
+	totalLoyaltyPoints INT,
 	PRIMARY KEY (customerID),
 	FOREIGN KEY (customerID) REFERENCES activeCustomer(customerID)
 )
@@ -144,15 +144,15 @@ CREATE TABLE maintenanceItem (
 -- -------------------------
 
 CREATE TABLE jobTitle (
-	jobTitle VARCHAR(20) NOT NULL,
+	jobTitle VARCHAR(100) NOT NULL,
 	PRIMARY KEY (jobTitle)
 )
 
 CREATE TABLE employee (
 	employeeID INT NOT NULL AUTO_INCREMENT,
-	name,
-	phone,
-	jobTitle,
+	name VARCHAR(100),
+	phone INT,
+	jobTitle VARCHAR(100),
 	PRIMARY KEY (employeeID),
 	FOREIGN KEY (jobTitle) REFERENCES jobTitle(jobTitle),
 	CONSTRAINT employee_name_phone_ck01 UNIQUE (name, phone)
@@ -178,14 +178,14 @@ CREATE TABLE expenses (
 	date DATETIME NOT NULL,
 	cardNumber VARCHAR(20) NOT NULL,
 	amount INT,
-	description,
+	description TEXT,
 	PRIMARY KEY (date, cardNumber),
 	FOREIGN KEY (employeeID) REFERENCES employee(employeeID),
 	CONSTRAINT expenses_card_employee_ck01 UNIQUE (date, employeeID)
 )
 
 CREATE TABLE leaveType (
-	leaveType VARCHAR(20) NOT NULL,
+	leaveType VARCHAR(50) NOT NULL,
 	PRIMARY KEY (leaveType)
 )
 
@@ -193,9 +193,9 @@ CREATE TABLE daysOff (
 	start DATE NOT NULL,
 	end DATE NOT NULL,
 	employeeID INT NOT NULL,
-	reason,
+	reason TEXT,
 	approved BOOLEAN DEFAULT 0,
-	leaveType,
+	leaveType VARCHAR(50),
 	PRIMARY KEY (start, employeeID),
 	FOREIGN KEY (employeeID) REFERENCES employee(employeeID),
 	FOREIGN KEY (leaveType) REFERENCES leaveType(leaveType),
@@ -209,14 +209,14 @@ CREATE TABLE mechanic (
 )
 
 CREATE TABLE skills (
-	name VARCHAR(20) NOT NULL,
-	description,
+	name VARCHAR(50) NOT NULL,
+	description TEXT,
 	PRIMARY KEY (name)
 )
 
 CREATE TABLE mechanicSkills (
 	employeeID INT NOT NULL,
-	skillName VARCHAR(20) NOT NULL,
+	skillName VARCHAR(50) NOT NULL,
 	PRIMARY KEY (employeeID, skillName),
 	FOREIGN KEY (employeeID) REFERENCES mechanic(employeeID),
 	FOREIGN KEY (skillName) REFERENCES skills(name)
@@ -227,7 +227,7 @@ CREATE TABLE mentoringRelationship (
 	start DATE NOT NULL,
 	end DATE,
 	mentorID INT NOT NULL,
-	skillName VARCHAR(20) NOT NULL,
+	skillName VARCHAR(50) NOT NULL,
 	PRIMARY KEY (menteeID, start, mentorID, skillName),
 	FOREIGN KEY (menteeID) REFERENCES mechanic(employeeID),
 	FOREIGN KEY (mentorID, skillName) REFERENCES mechanicSkills(employeeID, skillName)
@@ -235,16 +235,17 @@ CREATE TABLE mentoringRelationship (
 
 CREATE TABLE internApprentice (
 	employeeID INT NOT NULL,
-	employmentDuration,
+	start DATE NOT NULL,
+	end DATE,
 	evaluationNotes TEXT,
-	standing,
+	standing VARCHAR(50),
 	PRIMARY KEY (employeeID),
 	FOREIGN KEY (employeeID) REFERENCES employee(employeeID)
 )
 
 CREATE TABLE internApprenticeSkill (
 	employeeID INT NOT NULL,
-	skillName VARCHAR(20) NOT NULL,
+	skillName VARCHAR(50) NOT NULL,
 	PRIMARY KEY (employeeID, skillName),
 	FOREIGN KEY (employeeID) REFERENCES internApprentice(employeeID),
 	FOREIGN KEY (skillName) REFERENCES skills(name)
@@ -364,7 +365,7 @@ CREATE TABLE packageItemRequired (
 )
 
 CREATE TABLE itemSkills (
-	skillName VARCHAR(20) NOT NULL,
+	skillName VARCHAR(50) NOT NULL,
 	itemName VARCHAR(200) NOT NULL,
 	PRIMARY KEY (skillName, itemName),
 	FOREIGN KEY (skillName) REFERENCES skills(name),
@@ -378,7 +379,7 @@ CREATE TABLE skillRequiredPackage (
 	model VARCHAR(40) NOT NULL,
 	year INT NOT NULL,
 	maintenanceID INT NOT NULL,
-	skillName VARCHAR(20) NOT NULL,
+	skillName VARCHAR(50) NOT NULL,
 	PRIMARY KEY (itemName, milage, make, model, year, maintenanceID, skillName),
 	FOREIGN KEY (itemName, milage, make, model, year, maintenanceID) REFERENCES packageItemRequired(itemName, milage, make, model, year, maintenanceID),
 	FOREIGN KEY (itemName, skillName) REFERENCES itemSkills(itemName, skillName)
@@ -391,7 +392,7 @@ CREATE TABLE assignedPackageSkillList (
 	model VARCHAR(40) NOT NULL,
 	year INT NOT NULL,
 	maintenanceID INT NOT NULL,
-	skillName VARCHAR(20) NOT NULL,
+	skillName VARCHAR(50) NOT NULL,
 	employeeID INT NOT NULL,
 	PRIMARY KEY (itemName, milage, make, model, year, maintenanceID, skillName, employeeID),
 	FOREIGN KEY (itemName, milage, make, model, year, maintenanceID, skillName) REFERENCES skillRequiredPackage(itemName, milage, make, model, year, maintenanceID, skillName),
@@ -407,7 +408,7 @@ CREATE TABLE itemRequired (
 )
 
 CREATE TABLE itemSkillRequired (
-	skillName VARCHAR(20) NOT NULL,
+	skillName VARCHAR(50) NOT NULL,
 	itemName VARCHAR(200) NOT NULL,
 	maintenanceID INT NOT NULL,
 	PRIMARY KEY (skillName, itemName, maintenanceID),
@@ -416,7 +417,7 @@ CREATE TABLE itemSkillRequired (
 )
 
 CREATE TABLE assignedItemSkillList (
-	skillName VARCHAR(20) NOT NULL,
+	skillName VARCHAR(50) NOT NULL,
 	itemName VARCHAR(200) NOT NULL,
 	maintenanceID INT NOT NULL,
 	employeeID INT NOT NULL,

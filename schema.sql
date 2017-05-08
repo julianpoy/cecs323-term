@@ -428,6 +428,31 @@ CREATE TABLE assignedItemSkillList (
 	FOREIGN KEY (skillName, employeeID) REFERENCES mechanicSkills(skillName, employeeID)
 );
 
+CREATE TABLE competitor (
+	competitorID INT NOT NULL AUTO_INCREMENT,
+	companyName VARCHAR(100) NOT NULL,
+	address VARCHAR(100),
+	city VARCHAR(100),
+	zip VARCHAR(20),
+	state VARCHAR(50),
+	PRIMARY KEY (competitorID),
+	CONSTRAINT competitor_name_address_zip_ck01 UNIQUE(companyName, address, zip)
+);
+
+CREATE TABLE competitorService (
+	competitorID INT NOT NULL,
+	itemName VARCHAR(100) NOT NULL,
+	cost INT,
+	PRIMARY KEY (competitorID, itemName),
+	FOREIGN KEY (competitorID) REFERENCES competitor(competitorID),
+	FOREIGN KEY (itemName) REFERENCES item(itemName)
+);
+
+
+
+
+
+
 
 
 

@@ -116,12 +116,21 @@ CREATE TABLE loyaltyPointsSpent (
 	FOREIGN KEY (customerID) REFERENCES steady(customerID)
 )
 
--- maintenanceItem field unclear type or reference
+CREATE TABLE item (
+	itemName VARCHAR(200) NOT NULL,
+	itemDescrip TEXT,
+	cost INT,
+	timeRequired INT,
+	PRIMARY KEY (itemName)
+)
+
+-- Relies on item table 
 CREATE TABLE maintenanceItem (
-	maintenanceItem,
+	maintenanceItem VARCHAR(200) NOT NULL,
 	customerID INT NOT NULL,
 	dateSpent DATE NOT NULL,
 	PRIMARY KEY (maintenanceItem, customerID, dateSpent),
+	FOREIGN KEY (maintenanceItem) REFERENCES item(itemName),
 	FOREIGN KEY (customerID, dateSpent) REFERENCES loyaltyPointsSpent(customerID, dateSpent)
 )
 
@@ -241,7 +250,128 @@ CREATE TABLE internApprenticeSkill (
 	FOREIGN KEY (skillName) REFERENCES skills(name)
 )
 
+CREATE TABLE serviceTechnician (
+	employeeID INT NOT NULL,
+	PRIMARY KEY (employeeID),
+	FOREIGN KEY (employeeID) REFERENCES employee(employeeID)
+)
+
 -- -------------------------
 -- END EMPLOYEE TABLES
 -- -------------------------
+
+
+-- -------------------------
+-- VEHICLE TABLES
+-- -------------------------
+
+CREATE TABLE vehicle (
+	make VARCHAR(40) NOT NULL,
+	model VARCHAR(40) NOT NULL,
+	year INT NOT NULL,
+	PRIMARY KEY (make, model, year)
+)
+
+CREATE TABLE instanceOfCar (
+	make VARCHAR(40) NOT NULL,
+	model VARCHAR(40) NOT NULL,
+	year INT NOT NULL,
+	licensePlate VARCHAR(20) NOT NULL,
+	updatedDate DATE DEFAULT GETDATE(),
+	lastIntervalPerformed DATE,
+	lastRecordedMilage INT,
+	hasHadAccident BOOLEAN DEFAULT 0,
+	projectedMilesPerYear INT,
+	PRIMARY KEY (licensePlate),
+	FOREIGN KEY (make, model, year) REFERENCES vehicle(make, model, year)
+)
+
+CREATE TABLE customerCar (
+	licensePlate VARCHAR(20) NOT NULL,
+	customerID INT NOT NULL,
+	PRIMARY KEY (licensePlate, customerID),
+	FOREIGN KEY (licensePlate) REFERENCES instanceOfCar(licensePlate),
+	FOREIGN KEY (customerID) REFERENCES customer(customerID)
+)
+
+CREATE TABLE scheduledMaintenance (
+	customerID INT NOT NULL,
+	licensePlate VARCHAR(20) NOT NULL,
+	dateTime DATETIME NOT NULL,
+	cost INT NOT NULL,
+	timeRequired INT NOT NULL,
+	PRIMARY KEY (customerID, licensePlate, dateTime),
+	FOREIGN KEY (customerID, licensePlate) REFERENCES customerCar(licensePlate, customerID)
+)
+
+CREATE TABLE maintenanceVisitOrder (
+	maintenanceID INT NOT NULL AUTO_INCREMENT,
+	licensePlate VARCHAR(20) NOT NULL,
+	dateTime DATETIME NOT NULL,
+	customerID INT NOT NULL,
+	serviceTechnicianID INT NOT NULL,
+	PRIMARY KEY (maintenanceID),
+	FOREIGN KEY (licensePlate, dateTime, customerID) REFERENCES scheduledMaintenance(licensePlate, dateTime, customerID),
+	FOREIGN KEY (serviceTechnicianID) REFERENCES serviceTechnician(employeeID),
+	CONSTRAINT maintenanceVisitOrder_lic_datetime_customer_ck01 UNIQUE(licensePlate, dateTime, customerID)
+)
+
+CREATE TABLE package (
+	milage INT NOT NULL,
+	make VARCHAR(40) NOT NULL,
+	model VARCHAR(40) NOT NULL,
+	year INT NOT NULL,
+	cost INT,
+	timeRequired INT,
+	PRIMARY KEY (milage, make, model, year),
+	FOREIGN KEY (make, model, year) REFERENCES vehicle(make, model, year)
+)
+
+CREATE TABLE scheduledIntervalMaintenance (
+	customerID INT NOT NULL,
+	licensePlate VARCHAR(20) NOT NULL,
+	dateTime DATETIME NOT NULL,
+	milage INT NOT NULL,
+	make VARCHAR(40) NOT NULL,
+	model VARCHAR(40) NOT NULL,
+	year INT NOT NULL,
+	PRIMARY KEY (customerID, licensePlate, dateTime, milage, make, model, year),
+	FOREIGN KEY (customerID, licensePlate, dateTime) REFERENCES scheduledMaintenance(customerID, licensePlate, dateTime),
+	FOREIGN KEY (milage, make, model, year) REFERENCES package(milage, make, model, year)
+)
+
+CREATE TABLE packageItem (
+	itemName VARCHAR(200) NOT NULL,
+	milage INT NOT NULL,
+	make VARCHAR(40) NOT NULL,
+	model VARCHAR(40) NOT NULL,
+	year INT NOT NULL,
+	PRIMARY KEY (itemName, milage, make, model, year),
+	FOREIGN KEY (itemName) REFERENCES item(itemName),
+	FOREIGN KEY (milage, make, model, year) REFERENCES package(milage, make, model, year)
+)
+
+CREATE TABLE packageItemRequired (
+	itemName VARCHAR(200) NOT NULL,
+	milage INT NOT NULL,
+	make VARCHAR(40) NOT NULL,
+	model VARCHAR(40) NOT NULL,
+	year INT NOT NULL,
+	maintenanceID INT NOT NULL AUTO_INCREMENT,
+	PRIMARY KEY (itemName, milage, make, model, year, maintenanceID),
+	FOREIGN KEY (itemName, milage, make, model, year) REFERENCES packageItem(itemName, milage, make, model, year),
+	FOREIGN KEY (maintenanceID) REFERENCES (maintenanceID)
+)
+
+
+
+
+
+
+
+
+
+
+
+
 

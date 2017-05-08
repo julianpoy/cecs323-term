@@ -17,7 +17,7 @@ CREATE TABLE corporation (
 	customerID INT NOT NULL,
 	PRIMARY KEY (customerID),
 	FOREIGN KEY (customerID) REFERENCES customer(customerID)
-)
+);
 
 CREATE TABLE address (
 	customerID INT NOT NULL,
@@ -29,12 +29,12 @@ CREATE TABLE address (
 	PRIMARY KEY (customerID, addressType),
 	FOREIGN KEY (customerID) REFERENCES customer(customerID),
 	FOREIGN KEY (addressType) REFERENCES addressType(addressType)
-)
+);
 
 CREATE TABLE addressType (
 	addressType VARCHAR(100) NOT NULL,
 	PRIMARY KEY (addressType)
-)
+);
 
 CREATE TABLE private (
 	customerID INT NOT NULL,
@@ -44,13 +44,13 @@ CREATE TABLE private (
 	zip INT,
 	PRIMARY KEY (customerID),
 	FOREIGN KEY (customerID) REFERENCES customer(customerID)
-)
+);
 
 CREATE TABLE activeCustomer (
 	customerID INT NOT NULL,
 	PRIMARY KEY (customerID),
 	FOREIGN KEY (customerID) REFERENCES customer(customerID)
-)
+);
 
 CREATE TABLE premier (
 	customerID INT NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE premier (
 	premierServiceValue INT,
 	PRIMARY KEY (customerID),
 	FOREIGN KEY (customerID) REFERENCES activeCustomer(customerID)
-)
+);
 
 
 -- May remove reference back to activeCustomer (referralID)
@@ -72,14 +72,14 @@ CREATE TABLE prospective (
 	PRIMARY KEY (customerID),
 	FOREIGN KEY (customerID) REFERENCES customer(customerID),
 	FOREIGN KEY (referralID) REFERENCES activeCustomer(customerID)
-)
+);
 
 CREATE TABLE contactInstanceDate (
 	customerID INT NOT NULL,
 	contactInstanceDate DATE NOT NULL,
 	PRIMARY KEY (customerID, contactInstanceDate),
 	FOREIGN KEY (customerID) REFERENCES prospective(customerID)
-)
+);
 
 CREATE TABLE premierReferral (
 	customerID INT NOT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE premierReferral (
 	PRIMARY KEY (customerID, referralID),
 	FOREIGN KEY (customerID) REFERENCES premier(customerID),
 	FOREIGN KEY (referralID) REFERENCES prospective(customerID)
-)
+);
 
 CREATE TABLE steady (
 	customerID INT NOT NULL,
@@ -96,7 +96,7 @@ CREATE TABLE steady (
 	totalLoyaltyPoints INT,
 	PRIMARY KEY (customerID),
 	FOREIGN KEY (customerID) REFERENCES activeCustomer(customerID)
-)
+);
 
 CREATE TABLE steadyReferral (
 	customerID INT NOT NULL,
@@ -106,7 +106,7 @@ CREATE TABLE steadyReferral (
 	PRIMARY KEY (customerID, referralID),
 	FOREIGN KEY (customerID) REFERENCES steady(customerID),
 	FOREIGN key (referralID) REFERENCES prospective(customerID)
-)
+);
 
 CREATE TABLE loyaltyPointsSpent (
 	customerID INT NOT NULL,
@@ -114,7 +114,7 @@ CREATE TABLE loyaltyPointsSpent (
 	numberLoyaltyPointsSpent INT,
 	PRIMARY KEY (customerID, dateSpent),
 	FOREIGN KEY (customerID) REFERENCES steady(customerID)
-)
+);
 
 CREATE TABLE item (
 	itemName VARCHAR(200) NOT NULL,
@@ -122,7 +122,7 @@ CREATE TABLE item (
 	cost INT,
 	timeRequired INT,
 	PRIMARY KEY (itemName)
-)
+);
 
 -- Relies on item table 
 CREATE TABLE maintenanceItem (
@@ -132,7 +132,7 @@ CREATE TABLE maintenanceItem (
 	PRIMARY KEY (maintenanceItem, customerID, dateSpent),
 	FOREIGN KEY (maintenanceItem) REFERENCES item(itemName),
 	FOREIGN KEY (customerID, dateSpent) REFERENCES loyaltyPointsSpent(customerID, dateSpent)
-)
+);
 
 -- -------------------------
 -- END CUSTOMER TABLES
@@ -146,7 +146,7 @@ CREATE TABLE maintenanceItem (
 CREATE TABLE jobTitle (
 	jobTitle VARCHAR(100) NOT NULL,
 	PRIMARY KEY (jobTitle)
-)
+);
 
 CREATE TABLE employee (
 	employeeID INT NOT NULL AUTO_INCREMENT,
@@ -156,13 +156,13 @@ CREATE TABLE employee (
 	PRIMARY KEY (employeeID),
 	FOREIGN KEY (jobTitle) REFERENCES jobTitle(jobTitle),
 	CONSTRAINT employee_name_phone_ck01 UNIQUE (name, phone)
-)
+);
 
 CREATE TABLE experiencedEmployee (
 	employeeID INT NOT NULL,
 	PRIMARY KEY (employeeID),
 	FOREIGN KEY (employeeID) REFERENCES employee(employeeID)
-)
+);
 
 CREATE TABLE employeeReview (
 	revieweeID INT NOT NULL,
@@ -171,7 +171,7 @@ CREATE TABLE employeeReview (
 	PRIMARY KEY (revieweeID, reviewerID, date),
 	FOREIGN KEY (revieweeID) REFERENCES employee(employeeID),
 	FOREIGN KEY (reviewerID) REFERENCES experiencedEmployee(employeeID)
-)
+);
 
 CREATE TABLE expenses (
 	employeeID INT NOT NULL,
@@ -182,12 +182,12 @@ CREATE TABLE expenses (
 	PRIMARY KEY (date, cardNumber),
 	FOREIGN KEY (employeeID) REFERENCES employee(employeeID),
 	CONSTRAINT expenses_card_employee_ck01 UNIQUE (date, employeeID)
-)
+);
 
 CREATE TABLE leaveType (
 	leaveType VARCHAR(50) NOT NULL,
 	PRIMARY KEY (leaveType)
-)
+);
 
 CREATE TABLE daysOff (
 	start DATE NOT NULL,
@@ -200,19 +200,19 @@ CREATE TABLE daysOff (
 	FOREIGN KEY (employeeID) REFERENCES employee(employeeID),
 	FOREIGN KEY (leaveType) REFERENCES leaveType(leaveType),
 	CONSTRAINT daysOff_end_employee_ck01 UNIQUE (end, employeeID)
-)
+);
 
 CREATE TABLE mechanic (
 	employeeID INT NOT NULL,
 	PRIMARY KEY (employeeID),
 	FOREIGN KEY (employeeID) REFERENCES employee(employeeID)
-)
+);
 
 CREATE TABLE skills (
 	name VARCHAR(50) NOT NULL,
 	description TEXT,
 	PRIMARY KEY (name)
-)
+);
 
 CREATE TABLE mechanicSkills (
 	employeeID INT NOT NULL,
@@ -220,7 +220,7 @@ CREATE TABLE mechanicSkills (
 	PRIMARY KEY (employeeID, skillName),
 	FOREIGN KEY (employeeID) REFERENCES mechanic(employeeID),
 	FOREIGN KEY (skillName) REFERENCES skills(name)
-)
+);
 
 CREATE TABLE mentoringRelationship (
 	menteeID INT NOT NULL,
@@ -231,7 +231,7 @@ CREATE TABLE mentoringRelationship (
 	PRIMARY KEY (menteeID, start, mentorID, skillName),
 	FOREIGN KEY (menteeID) REFERENCES mechanic(employeeID),
 	FOREIGN KEY (mentorID, skillName) REFERENCES mechanicSkills(employeeID, skillName)
-)
+);
 
 CREATE TABLE internApprentice (
 	employeeID INT NOT NULL,
@@ -241,7 +241,7 @@ CREATE TABLE internApprentice (
 	standing VARCHAR(50),
 	PRIMARY KEY (employeeID),
 	FOREIGN KEY (employeeID) REFERENCES employee(employeeID)
-)
+);
 
 CREATE TABLE internApprenticeSkill (
 	employeeID INT NOT NULL,
@@ -249,13 +249,13 @@ CREATE TABLE internApprenticeSkill (
 	PRIMARY KEY (employeeID, skillName),
 	FOREIGN KEY (employeeID) REFERENCES internApprentice(employeeID),
 	FOREIGN KEY (skillName) REFERENCES skills(name)
-)
+);
 
 CREATE TABLE serviceTechnician (
 	employeeID INT NOT NULL,
 	PRIMARY KEY (employeeID),
 	FOREIGN KEY (employeeID) REFERENCES employee(employeeID)
-)
+);
 
 -- -------------------------
 -- END EMPLOYEE TABLES
@@ -271,7 +271,7 @@ CREATE TABLE vehicle (
 	model VARCHAR(40) NOT NULL,
 	year INT NOT NULL,
 	PRIMARY KEY (make, model, year)
-)
+);
 
 CREATE TABLE instanceOfCar (
 	make VARCHAR(40) NOT NULL,
@@ -287,7 +287,7 @@ CREATE TABLE instanceOfCar (
 	stateCode VARCHAR(20)
 	PRIMARY KEY (VIN),
 	FOREIGN KEY (make, model, year) REFERENCES vehicle(make, model, year)
-)
+);
 
 CREATE TABLE customerCar (
 	VIN VARCHAR(50) NOT NULL,
@@ -295,7 +295,7 @@ CREATE TABLE customerCar (
 	PRIMARY KEY (VIN, customerID),
 	FOREIGN KEY (VIN) REFERENCES instanceOfCar(VIN),
 	FOREIGN KEY (customerID) REFERENCES customer(customerID)
-)
+);
 
 CREATE TABLE scheduledMaintenance (
 	customerID INT NOT NULL,
@@ -305,7 +305,7 @@ CREATE TABLE scheduledMaintenance (
 	timeRequired INT NOT NULL,
 	PRIMARY KEY (customerID, VIN, dateTime),
 	FOREIGN KEY (customerID, VIN) REFERENCES customerCar(VIN, customerID)
-)
+);
 
 CREATE TABLE maintenanceVisitOrder (
 	maintenanceID INT NOT NULL AUTO_INCREMENT,
@@ -317,7 +317,7 @@ CREATE TABLE maintenanceVisitOrder (
 	FOREIGN KEY (VIN, dateTime, customerID) REFERENCES scheduledMaintenance(VIN, dateTime, customerID),
 	FOREIGN KEY (serviceTechnicianID) REFERENCES serviceTechnician(employeeID),
 	CONSTRAINT maintenanceVisitOrder_lic_datetime_customer_ck01 UNIQUE(VIN, dateTime, customerID)
-)
+);
 
 CREATE TABLE package (
 	milage INT NOT NULL,
@@ -328,7 +328,7 @@ CREATE TABLE package (
 	timeRequired INT,
 	PRIMARY KEY (milage, make, model, year),
 	FOREIGN KEY (make, model, year) REFERENCES vehicle(make, model, year)
-)
+);
 
 CREATE TABLE scheduledIntervalMaintenance (
 	customerID INT NOT NULL,
@@ -341,7 +341,7 @@ CREATE TABLE scheduledIntervalMaintenance (
 	PRIMARY KEY (customerID, VIN, dateTime, milage, make, model, year),
 	FOREIGN KEY (customerID, VIN, dateTime) REFERENCES scheduledMaintenance(customerID, VIN, dateTime),
 	FOREIGN KEY (milage, make, model, year) REFERENCES package(milage, make, model, year)
-)
+);
 
 CREATE TABLE packageItem (
 	itemName VARCHAR(200) NOT NULL,
@@ -352,7 +352,7 @@ CREATE TABLE packageItem (
 	PRIMARY KEY (itemName, milage, make, model, year),
 	FOREIGN KEY (itemName) REFERENCES item(itemName),
 	FOREIGN KEY (milage, make, model, year) REFERENCES package(milage, make, model, year)
-)
+);
 
 CREATE TABLE packageItemRequired (
 	itemName VARCHAR(200) NOT NULL,
@@ -364,7 +364,7 @@ CREATE TABLE packageItemRequired (
 	PRIMARY KEY (itemName, milage, make, model, year, maintenanceID),
 	FOREIGN KEY (itemName, milage, make, model, year) REFERENCES packageItem(itemName, milage, make, model, year),
 	FOREIGN KEY (maintenanceID) REFERENCES (maintenanceID)
-)
+);
 
 CREATE TABLE itemSkills (
 	skillName VARCHAR(50) NOT NULL,
@@ -372,7 +372,7 @@ CREATE TABLE itemSkills (
 	PRIMARY KEY (skillName, itemName),
 	FOREIGN KEY (skillName) REFERENCES skills(name),
 	FOREIGN KEY (itemName) REFERENCES item(itemName)
-)
+);
 
 CREATE TABLE skillRequiredPackage (
 	itemName VARCHAR(200) NOT NULL,
@@ -385,7 +385,7 @@ CREATE TABLE skillRequiredPackage (
 	PRIMARY KEY (itemName, milage, make, model, year, maintenanceID, skillName),
 	FOREIGN KEY (itemName, milage, make, model, year, maintenanceID) REFERENCES packageItemRequired(itemName, milage, make, model, year, maintenanceID),
 	FOREIGN KEY (itemName, skillName) REFERENCES itemSkills(itemName, skillName)
-)
+);
 
 CREATE TABLE assignedPackageSkillList (
 	itemName VARCHAR(200) NOT NULL,
@@ -399,7 +399,7 @@ CREATE TABLE assignedPackageSkillList (
 	PRIMARY KEY (itemName, milage, make, model, year, maintenanceID, skillName, employeeID),
 	FOREIGN KEY (itemName, milage, make, model, year, maintenanceID, skillName) REFERENCES skillRequiredPackage(itemName, milage, make, model, year, maintenanceID, skillName),
 	FOREIGN KEY (skillName, employeeID) REFERENCES mechanicSkills(skillName, employeeID)
-)
+);
 
 CREATE TABLE itemRequired (
 	itemName VARCHAR(200) NOT NULL,
@@ -407,7 +407,7 @@ CREATE TABLE itemRequired (
 	PRIMARY KEY (itemName, maintenanceID),
 	FOREIGN KEY (itemName) REFERENCES item(itemName),
 	FOREIGN KEY (maintenanceID) REFERENCES maintenanceVisitOrder(maintenanceID)
-)
+);
 
 CREATE TABLE itemSkillRequired (
 	skillName VARCHAR(50) NOT NULL,
@@ -416,7 +416,7 @@ CREATE TABLE itemSkillRequired (
 	PRIMARY KEY (skillName, itemName, maintenanceID),
 	FOREIGN KEY (skillName, itemName) REFERENCES itemSkills(skillName, itemName),
 	FOREIGN KEY (itemName, maintenanceID) REFERENCES itemRequired(itemName, maintenanceID)
-)
+);
 
 CREATE TABLE assignedItemSkillList (
 	skillName VARCHAR(50) NOT NULL,
@@ -426,7 +426,7 @@ CREATE TABLE assignedItemSkillList (
 	PRIMARY KEY (skillName, itemName, maintenanceID, employeeID),
 	FOREIGN KEY (skillName, itemName, maintenanceID) REFERENCES itemSkillRequired(skillName, itemName, maintenanceID),
 	FOREIGN KEY (skillName, employeeID) REFERENCES mechanicSkills(skillName, employeeID)
-)
+);
 
 
 

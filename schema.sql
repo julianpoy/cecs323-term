@@ -277,44 +277,46 @@ CREATE TABLE instanceOfCar (
 	make VARCHAR(40) NOT NULL,
 	model VARCHAR(40) NOT NULL,
 	year INT NOT NULL,
-	licensePlate VARCHAR(20) NOT NULL,
+	VIN VARCHAR(50) NOT NULL,
 	updatedDate DATE DEFAULT GETDATE(),
 	lastIntervalPerformed DATE,
 	lastRecordedMilage INT,
 	hasHadAccident BOOLEAN DEFAULT 0,
 	projectedMilesPerYear INT,
-	PRIMARY KEY (licensePlate),
+	licensePlate VARCHAR(20),
+	stateCode VARCHAR(20)
+	PRIMARY KEY (VIN),
 	FOREIGN KEY (make, model, year) REFERENCES vehicle(make, model, year)
 )
 
 CREATE TABLE customerCar (
-	licensePlate VARCHAR(20) NOT NULL,
+	VIN VARCHAR(50) NOT NULL,
 	customerID INT NOT NULL,
-	PRIMARY KEY (licensePlate, customerID),
-	FOREIGN KEY (licensePlate) REFERENCES instanceOfCar(licensePlate),
+	PRIMARY KEY (VIN, customerID),
+	FOREIGN KEY (VIN) REFERENCES instanceOfCar(VIN),
 	FOREIGN KEY (customerID) REFERENCES customer(customerID)
 )
 
 CREATE TABLE scheduledMaintenance (
 	customerID INT NOT NULL,
-	licensePlate VARCHAR(20) NOT NULL,
+	VIN VARCHAR(50) NOT NULL,
 	dateTime DATETIME NOT NULL,
 	cost INT NOT NULL,
 	timeRequired INT NOT NULL,
-	PRIMARY KEY (customerID, licensePlate, dateTime),
-	FOREIGN KEY (customerID, licensePlate) REFERENCES customerCar(licensePlate, customerID)
+	PRIMARY KEY (customerID, VIN, dateTime),
+	FOREIGN KEY (customerID, VIN) REFERENCES customerCar(VIN, customerID)
 )
 
 CREATE TABLE maintenanceVisitOrder (
 	maintenanceID INT NOT NULL AUTO_INCREMENT,
-	licensePlate VARCHAR(20) NOT NULL,
+	VIN VARCHAR(50) NOT NULL,
 	dateTime DATETIME NOT NULL,
 	customerID INT NOT NULL,
 	serviceTechnicianID INT NOT NULL,
 	PRIMARY KEY (maintenanceID),
-	FOREIGN KEY (licensePlate, dateTime, customerID) REFERENCES scheduledMaintenance(licensePlate, dateTime, customerID),
+	FOREIGN KEY (VIN, dateTime, customerID) REFERENCES scheduledMaintenance(VIN, dateTime, customerID),
 	FOREIGN KEY (serviceTechnicianID) REFERENCES serviceTechnician(employeeID),
-	CONSTRAINT maintenanceVisitOrder_lic_datetime_customer_ck01 UNIQUE(licensePlate, dateTime, customerID)
+	CONSTRAINT maintenanceVisitOrder_lic_datetime_customer_ck01 UNIQUE(VIN, dateTime, customerID)
 )
 
 CREATE TABLE package (
@@ -330,14 +332,14 @@ CREATE TABLE package (
 
 CREATE TABLE scheduledIntervalMaintenance (
 	customerID INT NOT NULL,
-	licensePlate VARCHAR(20) NOT NULL,
+	VIN VARCHAR(50) NOT NULL,
 	dateTime DATETIME NOT NULL,
 	milage INT NOT NULL,
 	make VARCHAR(40) NOT NULL,
 	model VARCHAR(40) NOT NULL,
 	year INT NOT NULL,
-	PRIMARY KEY (customerID, licensePlate, dateTime, milage, make, model, year),
-	FOREIGN KEY (customerID, licensePlate, dateTime) REFERENCES scheduledMaintenance(customerID, licensePlate, dateTime),
+	PRIMARY KEY (customerID, VIN, dateTime, milage, make, model, year),
+	FOREIGN KEY (customerID, VIN, dateTime) REFERENCES scheduledMaintenance(customerID, VIN, dateTime),
 	FOREIGN KEY (milage, make, model, year) REFERENCES package(milage, make, model, year)
 )
 

@@ -19,6 +19,11 @@ CREATE TABLE corporation (
 	FOREIGN KEY (customerID) REFERENCES customer(customerID)
 );
 
+CREATE TABLE addressType (
+	addressType VARCHAR(100) NOT NULL,
+	PRIMARY KEY (addressType)
+);
+
 CREATE TABLE address (
 	customerID INT NOT NULL,
 	city VARCHAR(100) NOT NULL,
@@ -29,11 +34,6 @@ CREATE TABLE address (
 	PRIMARY KEY (customerID, addressType),
 	FOREIGN KEY (customerID) REFERENCES customer(customerID),
 	FOREIGN KEY (addressType) REFERENCES addressType(addressType)
-);
-
-CREATE TABLE addressType (
-	addressType VARCHAR(100) NOT NULL,
-	PRIMARY KEY (addressType)
 );
 
 CREATE TABLE private (
@@ -84,7 +84,7 @@ CREATE TABLE contactInstanceDate (
 CREATE TABLE premierReferral (
 	customerID INT NOT NULL,
 	referralID INT NOT NULL,
-	date DATETIME DEFAULT GETDATE(),
+	date DATETIME,
 	PRIMARY KEY (customerID, referralID),
 	FOREIGN KEY (customerID) REFERENCES premier(customerID),
 	FOREIGN KEY (referralID) REFERENCES prospective(customerID)
@@ -278,13 +278,13 @@ CREATE TABLE instanceOfCar (
 	model VARCHAR(40) NOT NULL,
 	year INT NOT NULL,
 	VIN VARCHAR(50) NOT NULL,
-	updatedDate DATE DEFAULT GETDATE(),
+	updatedDate DATE,
 	lastIntervalPerformed DATE,
 	lastRecordedMilage INT,
 	hasHadAccident BOOLEAN DEFAULT 0,
 	projectedMilesPerYear INT,
 	licensePlate VARCHAR(20),
-	stateCode VARCHAR(20)
+	stateCode VARCHAR(20),
 	PRIMARY KEY (VIN),
 	FOREIGN KEY (make, model, year) REFERENCES vehicle(make, model, year)
 );
@@ -304,7 +304,7 @@ CREATE TABLE scheduledMaintenance (
 	cost INT NOT NULL,
 	timeRequired INT NOT NULL,
 	PRIMARY KEY (customerID, VIN, dateTime),
-	FOREIGN KEY (customerID, VIN) REFERENCES customerCar(VIN, customerID)
+	FOREIGN KEY (VIN, customerID) REFERENCES customerCar(VIN, customerID)
 );
 
 CREATE TABLE maintenanceVisitOrder (
@@ -314,7 +314,7 @@ CREATE TABLE maintenanceVisitOrder (
 	customerID INT NOT NULL,
 	serviceTechnicianID INT NOT NULL,
 	PRIMARY KEY (maintenanceID),
-	FOREIGN KEY (VIN, dateTime, customerID) REFERENCES scheduledMaintenance(VIN, dateTime, customerID),
+	FOREIGN KEY (customerID, VIN, dateTime) REFERENCES scheduledMaintenance(customerID, VIN, dateTime),
 	FOREIGN KEY (serviceTechnicianID) REFERENCES serviceTechnician(employeeID),
 	CONSTRAINT maintenanceVisitOrder_lic_datetime_customer_ck01 UNIQUE(VIN, dateTime, customerID)
 );
@@ -363,7 +363,7 @@ CREATE TABLE packageItemRequired (
 	maintenanceID INT NOT NULL,
 	PRIMARY KEY (itemName, milage, make, model, year, maintenanceID),
 	FOREIGN KEY (itemName, milage, make, model, year) REFERENCES packageItem(itemName, milage, make, model, year),
-	FOREIGN KEY (maintenanceID) REFERENCES (maintenanceID)
+	FOREIGN KEY (maintenanceID) REFERENCES maintenanceVisitOrder(maintenanceID)
 );
 
 CREATE TABLE itemSkills (

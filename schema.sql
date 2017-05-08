@@ -357,20 +357,73 @@ CREATE TABLE packageItemRequired (
 	make VARCHAR(40) NOT NULL,
 	model VARCHAR(40) NOT NULL,
 	year INT NOT NULL,
-	maintenanceID INT NOT NULL AUTO_INCREMENT,
+	maintenanceID INT NOT NULL,
 	PRIMARY KEY (itemName, milage, make, model, year, maintenanceID),
 	FOREIGN KEY (itemName, milage, make, model, year) REFERENCES packageItem(itemName, milage, make, model, year),
 	FOREIGN KEY (maintenanceID) REFERENCES (maintenanceID)
 )
 
+CREATE TABLE itemSkills (
+	skillName VARCHAR(20) NOT NULL,
+	itemName VARCHAR(200) NOT NULL,
+	PRIMARY KEY (skillName, itemName),
+	FOREIGN KEY (skillName) REFERENCES skills(name),
+	FOREIGN KEY (itemName) REFERENCES item(itemName)
+)
 
+CREATE TABLE skillRequiredPackage (
+	itemName VARCHAR(200) NOT NULL,
+	milage INT NOT NULL,
+	make VARCHAR(40) NOT NULL,
+	model VARCHAR(40) NOT NULL,
+	year INT NOT NULL,
+	maintenanceID INT NOT NULL,
+	skillName VARCHAR(20) NOT NULL,
+	PRIMARY KEY (itemName, milage, make, model, year, maintenanceID, skillName),
+	FOREIGN KEY (itemName, milage, make, model, year, maintenanceID) REFERENCES packageItemRequired(itemName, milage, make, model, year, maintenanceID),
+	FOREIGN KEY (itemName, skillName) REFERENCES itemSkills(itemName, skillName)
+)
 
+CREATE TABLE assignedPackageSkillList (
+	itemName VARCHAR(200) NOT NULL,
+	milage INT NOT NULL,
+	make VARCHAR(40) NOT NULL,
+	model VARCHAR(40) NOT NULL,
+	year INT NOT NULL,
+	maintenanceID INT NOT NULL,
+	skillName VARCHAR(20) NOT NULL,
+	employeeID INT NOT NULL,
+	PRIMARY KEY (itemName, milage, make, model, year, maintenanceID, skillName, employeeID),
+	FOREIGN KEY (itemName, milage, make, model, year, maintenanceID, skillName) REFERENCES skillRequiredPackage(itemName, milage, make, model, year, maintenanceID, skillName),
+	FOREIGN KEY (skillName, employeeID) REFERENCES mechanicSkills(skillName, employeeID)
+)
 
+CREATE TABLE itemRequired (
+	itemName VARCHAR(200) NOT NULL,
+	maintenanceID INT NOT NULL,
+	PRIMARY KEY (itemName, maintenanceID),
+	FOREIGN KEY (itemName) REFERENCES item(itemName),
+	FOREIGN KEY (maintenanceID) REFERENCES maintenanceVisitOrder(maintenanceID)
+)
 
+CREATE TABLE itemSkillRequired (
+	skillName VARCHAR(20) NOT NULL,
+	itemName VARCHAR(200) NOT NULL,
+	maintenanceID INT NOT NULL,
+	PRIMARY KEY (skillName, itemName, maintenanceID),
+	FOREIGN KEY (skillName, itemName) REFERENCES itemSkills(skillName, itemName),
+	FOREIGN KEY (itemName, maintenanceID) REFERENCES itemRequired(itemName, maintenanceID)
+)
 
-
-
-
+CREATE TABLE assignedItemSkillList (
+	skillName VARCHAR(20) NOT NULL,
+	itemName VARCHAR(200) NOT NULL,
+	maintenanceID INT NOT NULL,
+	employeeID INT NOT NULL,
+	PRIMARY KEY (skillName, itemName, maintenanceID, employeeID),
+	FOREIGN KEY (skillName, itemName, maintenanceID) REFERENCES itemSkillRequired(skillName, itemName, maintenanceID),
+	FOREIGN KEY (skillName, employeeID) REFERENCES mechanicSkills(skillName, employeeID)
+)
 
 
 

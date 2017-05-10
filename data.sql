@@ -12,3 +12,15 @@ INSERT INTO customers(customerID, email, phone, customerName) VALUES
 (11,'my.arms.break@marvel.com',7779990000,'Daisy Johnson'),
 (12,'iseedeadpeople@marvel.com',9999990000,'Phill Coulson'),
 (13,'ihavebrotherissues@marvel.com',9999990000,'Grant Ward');
+
+
+INSERT INTO employee(name, phone, jobTitle) 
+VALUES ('Bruce Wayne', 6088811111, 'Service Technician'),
+VALUES ('Clark Kent', 6467771111, 'Mechanic'),
+VALUES ('Selina Kyle', 6086662222, 'Intern'),
+VALUES ('Jason Todd', 6085553333, 'Intern'),
+VALUES ('James Gordon', 6084443333, 'Mechanic'),
+VALUES ('Harvey Dent', 6083334444, 'Mechanic'),
+VALUES ('Barry Allen', 6082225555, 'Service Technician'),
+VALUES ('Hal Jordan', 6081116666, 'Mechanic'),
+VALUES ('Oliver Queen', 6080007777, 'Intern');

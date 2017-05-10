@@ -72,6 +72,23 @@ SELECT customerName, netProfit FROM customer
     ) a
     ORDER BY netProfit DESC;
 
+-- 12
+SELECT * FROM instanceOfCar
+    INNER JOIN (
+        SELECT VIN, COUNT(*) AS maintenanceCount FROM scheduledMaintenance
+            WHERE DATEDIFF(CURDATE(), dateTime) < 1095 
+            GROUP BY VIN
+            ORDER BY maintenanceCount DESC
+            LIMIT 5) a ON instanceOfCar.VIN = a.VIN;
 
+-- 13
+SELECT * FROM mentoringRelationship
+    INNER JOIN employee a ON a.employeeID = mentorID
+    INNER JOIN employee b ON b.employeeID = menteeID
+    WHERE mentorID IN (SELECT mentorID FROM mentoringRelationship
+        GROUP BY mentorID
+        HAVING count(skillName) = (SELECT MAX(skillCount) FROM (
+            SELECT mentorID, count(skillName) AS skillCount FROM mentoringRelationship
+                GROUP BY mentorID) a))
 
 

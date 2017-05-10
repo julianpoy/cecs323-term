@@ -39,7 +39,7 @@ CREATE TABLE address (
 
 CREATE TABLE private (
 	customerID INT NOT NULL,
-	mailingAddress VARCHAR(100),
+	address VARCHAR(100),
 	city VARCHAR(100),
 	state VARCHAR(50),
 	zip INT,

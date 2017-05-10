@@ -1,5 +1,5 @@
 USE `cecs323-term`;
-
+--Customers
 INSERT INTO customer(customerID, email, phone, customerName, dateJoined) VALUES 
 (1,'mindcontrol.maniac@marvel.com',9999998888,'Jessica Jones', '2006-11-03'),
 (2,'not.blind@marvel.com',9999997777,'Matthew Murdock','2004-05-11'),
@@ -13,33 +13,15 @@ INSERT INTO customer(customerID, email, phone, customerName, dateJoined) VALUES
 (10,'remake.my.movie.again@marvel.com',9991110000,'Peter Parker', '1997-10-30'),
 (11,'my.arms.break@marvel.com',7779990000,'Daisy Johnson', '2005-01-01'),
 (12,'iseedeadpeople@marvel.com',9999990000,'Phill Coulson', '2002-07-07'),
-(13,'ihavebrotherissues@marvel.com',9999990000,'Grant Ward', '2005-04-15');
-
+(13,'ihavebrotherissues@marvel.com',9999990000,'Grant Ward', '2005-04-15'),
+(14,'militarydivision@waynecorp.com',9999998888,'Wayne Corp', '2006-11-03');
+--Job titles insert
 INSERT INTO jobTitle (jobTitle) VALUES
 ('Mechanic'),
 ('Service Technician'),
 ('Intern'),
 ('Apprentice');
-
-INSERT INTO employee(name, phone, jobTitle, employeeID) VALUES 
-('Bruce Wayne', 6088811111, 'Service Technician'),
-('Clark Kent', 6467771111, 'Mechanic'),
-('Selina Kyle', 6086662222, 'Intern'),
-('Jason Todd', 6085553333, 'Intern'),
-('James Gordon', 6084443333, 'Mechanic'),
-('Harvey Dent', 6083334444, 'Mechanic'),
-('Barry Allen', 6082225555, 'Service Technician'),
-('Hal Jordan', 6081116666, 'Mechanic'),
-('Oliver Queen', 6080007777, 'Intern');
-
-INSERT INTO employee (name, phone, jobTitle, employeeID)
-values ('Julian Poyourow',3102597616,'Mechanic'),
-('Sam Wang',7143697988,'Service Technician'),
-('Wesley Huang',5628266596,'Service Technician'),
-('Jesse Blacklock',5627081326,'Intern');
-
-DELETE FROM employee;
-
+--Employee Insert
 INSERT INTO employee(name, phone, jobTitle, employeeID) VALUES 
 ('Bruce Wayne', 6088811111, 'Service Technician',1),
 ('Clark Kent', 6467771111, 'Mechanic',2),
@@ -53,12 +35,24 @@ INSERT INTO employee(name, phone, jobTitle, employeeID) VALUES
 ('Julian Poyourow',3102597616,'Mechanic',10),
 ('Sam Wang',7143697988,'Service Technician',11),
 ('Wesley Huang',5628266596,'Service Technician',12),
-('Jesse Blacklock',5627081326,'Intern',13);
+('Jesse Blacklock',5627081326,'Mechanic',13),
+('Julian Poyourow',3102597616,'Mechanic',14),
+('Sam Wang',7143697988,'Service Technician',15),
+('Wesley Huang',5628266596,'Service Technician',16),
+('Jesse Blacklock',5627081326,'Intern',17);
 
+--Skills Insert
 INSERT INTO skills (name, description) Values
 ('Replace Tire','Put a new tire where an old one was.'),
-('Change Oil','Put new oil in the car.');
+('Change Oil','Put new oil in the car.'),
+('Replace Windshield','Replace an old windshield with a new one.'),
+('Unscrew Screw','Unscrew a screw.'),
+('Tire Rotation', 'Rotate each tire on a vehicle to maintain longetivity'),
+('Alternator Replacement', 'Replace a broken or failing alternator'),
+('Timing Belt Replacement', 'Repalce an old or damage timing belt'),
+('Battery Replacement', 'Replace an existing Battery');
 
+--Insert into the active customer table via customerID
 INSERT INTO activeCustomer (customerID) Values
 (1),
 (2);
@@ -71,28 +65,16 @@ INSERT INTO prospective (customerID, referralID, status) Values
 (3, 1, false);
 
 INSERT INTO contactInstanceDate (customerID, contactInstanceDate) Values
-(3, '1999-05-06');
-
-INSERT INTO contactInstanceDate (customerID, contactInstanceDate) Values
+(3, '1999-05-06'),
 (3, '2017-01-01'),
 (3, '2017-05-08');
 
 INSERT INTO mechanic(employeeID) VALUES
+(13),
 (10);
-
-INSERT INTO mechanicSkills (employeeID, skillName) Values
-(10, 'Replace Tire'),
-(10, 'Change Oil');
-
-INSERT INTO mechanic(employeeID) VALUES
-(13);
 
 INSERT INTO mentoringRelationship(menteeID, start,end, mentorID, skillname) VALUES
 (13, '2017-05-05','2017-05-09',10,'Change Oil');
-
-UPDATE employee
-SET JobTitle = 'Mechanic'
-WHERE employeeID = 13;
 
 --we need a trigger that only peple listed as mechanics can be put in the mechanic table etc.
 
@@ -100,9 +82,7 @@ INSERT INTO steady(customerID, lastEmailsent, totalLoyaltyPoints) VALUES
 (2, '2017-05-06', 3);
 
 INSERT INTO vehicle (make, model, year)VALUES
-('Mazda','rx-7', 1984);
-
-INSERT INTO vehicle (make, model, year)VALUES
+('Mazda','rx-7', 1984),
 ('Toyota','Corolla', 1991);
 
 INSERT INTO instanceOfCar (make, model, year, VIN, updatedDate, lastIntervalPerformed, lastRecordedMilage, 
@@ -119,12 +99,6 @@ INSERT INTO contactInstanceDate (customerID, contactInstanceDate) Values
 INSERT INTO serviceTechnician(employeeID)VALUES
 (1);
 
-INSERT INTO customer(customerID, email, phone, customerName, dateJoined) VALUES 
-(14,'militarydivision@waynecorp.com',9999998888,'Wayne Corp', '2006-11-03');
-
-INSERT INTO customerCar(VIN,customerID) VALUES 
-('1FUPAXYB0LP379726',10);
-
 INSERT INTO scheduledMaintenance(VIN,customerID,dateTime, cost,timeRequired) VALUES 
 ('1FUPAXYB0LP379726',10, '2016-08-06', 45000, 2),
 ('1FUPAXYB0LP379726',10, '2016-05-13', 4500, 1),
@@ -132,11 +106,8 @@ INSERT INTO scheduledMaintenance(VIN,customerID,dateTime, cost,timeRequired) VAL
 ('1FUPAXYB0LP379726',10, '2010-04-23', 10000, 3);
 
 INSERT INTO customerCar(VIN,customerID) VALUES 
+('1FUPAXYB0LP379726',10),
 ('1C4NJPBB5FD110411',4);
-
-INSERT INTO skills (name, description) Values
-('Replace Windshield','Replace an old windshield with a new one.'),
-('Unscrew Screw','Unscrew a screw.');
 
 INSERT INTO mechanic (employeeID) Values
 (8);
@@ -144,26 +115,27 @@ INSERT INTO mechanic (employeeID) Values
 INSERT INTO mechanicSkills (employeeID, skillName) Values
 (8, 'Replace Windshield'),
 (8, 'Unscrew Screw'),
-(10, 'Unscrew Screw'),
 (8, 'Replace Tire'),
-(13, 'Change Oil');
+(8, 'Change Oil'),
+(13, 'Change Oil'),
+(10, 'Replace Tire'),
+(10, 'Unscrew Screw'),
+(10, 'Change Oil');
 
-INSERT INTO mechanicSkills (employeeID, skillName) Values
-(8, 'Change Oil');
 
 INSERT INTO item (itemName, itemDescrip, cost, timeRequired)VALUES
 ('Replace Front Window','Sometimes a car just needs a fresh window.',30000,1),
 ('Replace All Tires','You cannot drive a car without tires.', 60000, 3),
-('Replace Flux Screw','The Flux Screw will need replacing on occasion.', 500, 10); 
-
-INSERT INTO item (itemName, itemDescrip, cost, timeRequired)VALUES
+('Replace Flux Screw','The Flux Screw will need replacing on occasion.', 500, 10),
 ('Seal Refreshment','Rotary Motors are ver strange. Replace them seals!',150000,12);
 
 INSERT INTO package (milage, make, model, year, cost, timeRequired)VALUES
 (10000, 'Mazda', 'rx-7', 1984, 210000, 15);    
 
 INSERT INTO packageItem (itemName, milage, make, model, year)VALUES
-('Seal Refreshment', 10000, 'Mazda', 'rx-7', 1984);
-
-INSERT INTO packageItem (itemName, milage, make, model, year)VALUES
+('Seal Refreshment', 10000, 'Mazda', 'rx-7', 1984),
 ('Replace All Tires', 10000, 'Mazda', 'rx-7', 1984);
+
+INSERT INTO loyaltyPointsSpent(customerID, dateSpent, numberLoyaltyPointsSpent) VALUES
+(2,'2017-05-05', 2),
+(2,'2017-05-04', 1);

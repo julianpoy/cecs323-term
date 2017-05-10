@@ -56,8 +56,21 @@ SELECT customerName, totalLoyaltyPoints - spent AS loyaltyPointsRemaining FROM s
         GROUP BY customerID
     ) a
 
--- 9
+-- 9 DIDNT DO
 
+
+-- 10
+
+
+-- 11
+SELECT customerName, netProfit FROM customer
+    INNER JOIN steady USING (customerID)
+    INNER JOIN (
+        SELECT customerID, SUM(cost) AS netProfit FROM scheduledMaintenance
+            WHERE DATEDIFF(CURDATE(), dateTime) < 365
+            GROUP BY customerID
+    ) a
+    ORDER BY netProfit DESC;
 
 
 

@@ -5,7 +5,7 @@ INSERT INTO customer(customerID, email, phone, customerName, dateJoined) VALUES
 (4,'falcon.punch@marvel.com',9999995555,'Luke Cage', 1993-11-06),
 (5,'captamerica.sucks@marvel.com',9999994444,'Tony Stark', 2013-05-07),
 (6,'MURICAAAA@marvel.com',9999993333,'Steve Rogers', 1999-03-13),
-(7,'mini.ironman@marvel.com',9999992222,1,1,'c O Grady', 2001-08-19),
+(7,'mini.ironman@marvel.com',9999992222,'c O Grady', 2001-08-19),
 (8,'i.need.my.own.movie@marvel.com',9999991111,'Natasha Romanoff', 2007-09-15),
 (9,'mindcontrol.master@marvel.com',9999990000,'Wanda Maximoff', 1998-08-23),
 (10,'remake.my.movie.again@marvel.com',9991110000,'Peter Parker', 1997-10-30),

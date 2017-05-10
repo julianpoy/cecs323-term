@@ -26,3 +26,23 @@ SELECT customerName,
     LEFT JOIN address USING (customerID)
     LEFT JOIN private USING (customerID);
 
+CREATE VIEW Mechanic_mentor_v AS
+SELECT * FROM mechanic
+    INNER JOIN mechanicSkills USING (employeeID)
+    INNER JOIN mentoringRelationship ON mentorID = mechanicSkills.employeeID AND mentoringRelationship.skillName = mechanicSkills.skillName
+    INNER JOIN mechanic b ON b.employeeID = mechanic.employeeID;
+
+CREATE VIEW Premier_profits_v AS
+SELECT customerName, premierServiceValue FROM customers
+    INNER JOIN premier USING (customerID);
+
+CREATE VIEW Prospective_resurrection_v AS
+SELECT customerName, contactInstanceDate FROM customer
+    INNER JOIN prospective USING (customerID)
+    INNER JOIN contactInstanceDate USING (customerID)
+    WHERE customerName NOT IN (
+    SELECT customerName FROM customer
+        INNER JOIN prospective USING (customerID)
+        INNER JOIN contactInstanceDate USING (customerID)
+        WHERE DATEDIFF(CURDATE(), contactInstanceDate) < 365
+    );

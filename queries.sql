@@ -26,7 +26,7 @@ SELECT name, COUNT(skillName) AS skillCount FROM mechanicSkills
     GROUP BY name
     HAVING COUNT(skillName) >= 3;
 
--- 5
+-- 5 -- BROKEDED - HARD
 SELECT * FROM mechanicSkills
     WHERE employeeID IN
         (SELECT employeeID FROM mechanicSkills
@@ -45,5 +45,20 @@ SELECT * FROM mechanicSkills
 SELECT cost AS packageCost, itemName, milage, make, model, year FROM package
     LEFT JOIN packageItem USING (milage, make, model, year)
 
--- 7
-SELECT 
+-- 7 DIDNT DO
+
+
+-- 8
+SELECT customerName, totalLoyaltyPoints - spent AS loyaltyPointsRemaining FROM steady
+    INNER JOIN customer USING (customerID)
+    INNER JOIN (
+        SELECT customerID, SUM(numberLoyaltyPointsSpent) AS spent FROM loyaltyPointsSpent
+        GROUP BY customerID
+    ) a
+
+-- 9
+
+
+
+
+

@@ -42,3 +42,8 @@ SELECT * FROM mechanicSkills
     
 
 -- 6
+SELECT cost AS packageCost, itemName, milage, make, model, year FROM package
+    LEFT JOIN packageItem USING (milage, make, model, year)
+
+-- 7
+SELECT 

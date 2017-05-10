@@ -27,18 +27,25 @@ SELECT name, COUNT(skillName) AS skillCount FROM mechanicSkills
     HAVING COUNT(skillName) >= 3;
 
 -- 5 -- BROKEDED - HARD
-SELECT * FROM mechanicSkills
-    WHERE employeeID IN
-        (SELECT employeeID FROM mechanicSkills
-            GROUP BY employeeID
-            HAVING COUNT(SKILLNAME) >= 3)
-    INNER JOIN (
+SELECT e1.name AS FIRST, e2.name AS SECOND, count(a.skillName) AS SKILLS FROM (
         SELECT * FROM mechanicSkills
             WHERE employeeID IN
                 (SELECT employeeID FROM mechanicSkills
                     GROUP BY employeeID
                     HAVING COUNT(SKILLNAME) >= 3)
-    ) B
+    ) a
+    INNER JOIN (
+        SELECT * FROM mechanicSkills
+                WHERE employeeID IN
+                    (SELECT employeeID FROM mechanicSkills
+                        GROUP BY employeeID
+                        HAVING COUNT(SKILLNAME) >= 3)
+    ) b ON a.employeeID != b.employeeID AND a.skillName = b.skillName
+    INNER JOIN employee e1 ON e1.employeeID = a.employeeID
+    INNER JOIN employee e2 ON e2.employeeID = b.employeeID
+    WHERE e1.`name` > e2.`name`
+    GROUP BY a.employeeID, b.employeeID
+    HAVING SKILLS >= 3
     
 
 -- 6

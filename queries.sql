@@ -14,3 +14,10 @@ SELECT customerName,
 SELECT customerName, cost FROM scheduledMaintenance
     INNER JOIN customer USING(customerID)
 
+-- 3
+SELECT customerName, SUM(cost) FROM scheduledMaintenance
+    INNER JOIN customer USING (customerID)
+    WHERE DATEDIFF(CURDATE(), dateTime) < 730
+    GROUP BY customerName;
+
+-- 4

@@ -134,12 +134,6 @@ INSERT INTO scheduledMaintenance(VIN,customerID,dateTime, cost,timeRequired) VAL
 INSERT INTO customerCar(VIN,customerID) VALUES 
 ('1C4NJPBB5FD110411',4);
 
-INSERT INTO scheduledMaintenance(VIN,customerID,dateTime, cost,timeRequired) VALUES 
-('1FUPAXYB0LP379726',10, '2016-08-06', 45000, 2),
-('1FUPAXYB0LP379726',10, '2016-05-13', 4500, 1),
-('1FUPAXYB0LP379726',10, '2016-01-23', 10000, 3),
-('1FUPAXYB0LP379726',10, '2010-04-23', 10000, 3);
-
 INSERT INTO skills (name, description) Values
 ('Replace Windshield','Replace an old windshield with a new one.'),
 ('Unscrew Screw','Unscrew a screw.');
@@ -153,3 +147,23 @@ INSERT INTO mechanicSkills (employeeID, skillName) Values
 (10, 'Unscrew Screw'),
 (8, 'Replace Tire'),
 (13, 'Change Oil');
+
+INSERT INTO mechanicSkills (employeeID, skillName) Values
+(8, 'Change Oil');
+
+INSERT INTO item (itemName, itemDescrip, cost, timeRequired)VALUES
+('Replace Front Window','Sometimes a car just needs a fresh window.',30000,1),
+('Replace All Tires','You cannot drive a car without tires.', 60000, 3),
+('Replace Flux Screw','The Flux Screw will need replacing on occasion.', 500, 10); 
+
+INSERT INTO item (itemName, itemDescrip, cost, timeRequired)VALUES
+('Seal Refreshment','Rotary Motors are ver strange. Replace them seals!',150000,12);
+
+INSERT INTO package (milage, make, model, year, cost, timeRequired)VALUES
+(10000, 'Mazda', 'rx-7', 1984, 210000, 15);    
+
+INSERT INTO packageItem (itemName, milage, make, model, year)VALUES
+('Seal Refreshment', 10000, 'Mazda', 'rx-7', 1984);
+
+INSERT INTO packageItem (itemName, milage, make, model, year)VALUES
+('Replace All Tires', 10000, 'Mazda', 'rx-7', 1984);

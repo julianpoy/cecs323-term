@@ -26,7 +26,7 @@ SELECT name, COUNT(skillName) AS skillCount FROM mechanicSkills
     GROUP BY name
     HAVING COUNT(skillName) >= 3;
 
--- 5 -- BROKEDED - HARD
+-- 5
 SELECT e1.name AS FIRST, e2.name AS SECOND, count(a.skillName) AS SKILLS FROM (
         SELECT * FROM mechanicSkills
             WHERE employeeID IN
@@ -52,7 +52,7 @@ SELECT e1.name AS FIRST, e2.name AS SECOND, count(a.skillName) AS SKILLS FROM (
 SELECT cost AS packageCost, itemName, milage, make, model, year FROM package
     LEFT JOIN packageItem USING (milage, make, model, year);
 
--- 7 DIDNT DO
+-- 7
 
 
 -- 8
@@ -131,13 +131,13 @@ SELECT itemName, competitorService.cost AS theirCost, item.cost AS ourCost, comp
     INNER JOIN competitor USING (competitorID)
     ORDER BY difference ASC
 
--- #2
+-- #2 COMPARE AGAINST PARTICULAR COMPETITOR PRODUCT
 SELECT * FROM competitorService
     INNER JOIN item USING (itemName)
     INNER JOIN competitor USING (competitorID)
     WHERE itemName LIKE '%Front Window%'
 
--- #3
+-- #3 FIND COMPETITORS IN THE SAME STATE AS CUSTOMERS
 SELECT * FROM customer
     INNER JOIN private USING (customerID)
     INNER JOIN competitor ON competitor.state = private.state

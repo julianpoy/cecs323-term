@@ -9,6 +9,7 @@ CREATE TABLE customer (
 	accidentFreeAtDaves BOOLEAN DEFAULT 1,
 	alwaysWithin2kMiles BOOLEAN DEFAULT 1,
 	customerName VARCHAR(100),
+	dateJoined DATE,
 	PRIMARY KEY (customerID),
 	CONSTRAINT customer_email_phone_customerName_ck01 UNIQUE (email, phone, customerName)
 );

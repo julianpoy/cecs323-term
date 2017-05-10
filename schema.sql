@@ -327,7 +327,6 @@ CREATE TABLE package (
 	year INT NOT NULL,
 	cost INT,
 	timeRequired INT,
-	packageName VARCHAR(100),
 	PRIMARY KEY (milage, make, model, year),
 	FOREIGN KEY (make, model, year) REFERENCES vehicle(make, model, year)
 );

@@ -131,6 +131,8 @@ SELECT * FROM competitorService
     WHERE itemName LIKE '%Front Window%'
 
 -- #3
-
+SELECT * FROM customer
+    INNER JOIN private USING (customerID)
+    INNER JOIN competitor ON competitor.state = private.state
 
 

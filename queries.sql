@@ -21,3 +21,24 @@ SELECT customerName, SUM(cost) FROM scheduledMaintenance
     GROUP BY customerName;
 
 -- 4
+SELECT name, COUNT(skillName) AS skillCount FROM mechanicSkills
+    INNER JOIN employee USING (employeeID)
+    GROUP BY name
+    HAVING COUNT(skillName) >= 3;
+
+-- 5
+SELECT * FROM mechanicSkills
+    WHERE employeeID IN
+        (SELECT employeeID FROM mechanicSkills
+            GROUP BY employeeID
+            HAVING COUNT(SKILLNAME) >= 3)
+    INNER JOIN (
+        SELECT * FROM mechanicSkills
+            WHERE employeeID IN
+                (SELECT employeeID FROM mechanicSkills
+                    GROUP BY employeeID
+                    HAVING COUNT(SKILLNAME) >= 3)
+    ) B
+    
+
+-- 6

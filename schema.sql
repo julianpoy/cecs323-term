@@ -169,6 +169,7 @@ CREATE TABLE employeeReview (
 	revieweeID INT NOT NULL,
 	reviewerID INT NOT NULL,
 	date DATE NOT NULL,
+	evaluationNotes TEXT,
 	PRIMARY KEY (revieweeID, reviewerID, date),
 	FOREIGN KEY (revieweeID) REFERENCES employee(employeeID),
 	FOREIGN KEY (reviewerID) REFERENCES experiencedEmployee(employeeID)

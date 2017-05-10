@@ -27,13 +27,15 @@ SELECT customerName,
     LEFT JOIN private USING (customerID);
 
 CREATE VIEW Mechanic_mentor_v AS
-SELECT * FROM mechanic
+SELECT employee.name AS mentor, c.name AS mentee, mechanicSkills.skillName FROM mechanic
+    INNER JOIN employee USING (employeeID)
     INNER JOIN mechanicSkills USING (employeeID)
     INNER JOIN mentoringRelationship ON mentorID = mechanicSkills.employeeID AND mentoringRelationship.skillName = mechanicSkills.skillName
-    INNER JOIN mechanic b ON b.employeeID = mechanic.employeeID;
+    INNER JOIN mechanic b ON b.employeeID = mentoringRelationship.menteeID
+    INNER JOIN employee c ON b.employeeID = c.employeeID;
 
 CREATE VIEW Premier_profits_v AS
-SELECT customerName, premierServiceValue FROM customers
+SELECT customerName, premierServiceValue FROM customer
     INNER JOIN premier USING (customerID);
 
 CREATE VIEW Prospective_resurrection_v AS

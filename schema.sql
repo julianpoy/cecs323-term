@@ -5,7 +5,7 @@
 CREATE TABLE customer (
 	customerID INT NOT NULL AUTO_INCREMENT,
 	email VARCHAR(100),
-	phone INT,
+	phone BIGINT,
 	accidentFreeAtDaves BOOLEAN DEFAULT 1,
 	alwaysWithin2kMiles BOOLEAN DEFAULT 1,
 	customerName VARCHAR(100),
@@ -151,7 +151,7 @@ CREATE TABLE jobTitle (
 CREATE TABLE employee (
 	employeeID INT NOT NULL AUTO_INCREMENT,
 	name VARCHAR(100),
-	phone INT,
+	phone BIGINT,
 	jobTitle VARCHAR(100),
 	PRIMARY KEY (employeeID),
 	FOREIGN KEY (jobTitle) REFERENCES jobTitle(jobTitle),
